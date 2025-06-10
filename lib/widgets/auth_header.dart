@@ -440,7 +440,7 @@ class AuthHeader extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: const Text(
-                    '[MB]',
+                    '[Quizzo]',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -459,76 +459,6 @@ class AuthHeader extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Positioned(
-                      left: 0,
-                      child: Transform.rotate(
-                        angle: -0.2, // Adjust angle for triangle rotation
-                        child: const Icon(
-                          Icons.change_history,
-                          color: Colors.white,
-                          size: 24,
-                        ), // Triangle
-                      ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 10,
-                      right: 50,
-                      child: Transform.rotate(
-                        angle: 0.5,
-                        child: const Icon(
-                          Icons.star,
-                          color: Colors.white,
-                          size: 18,
-                        ), // Star
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 5,
-                      left: 50,
-                      child: Transform.rotate(
-                        angle: -0.5,
-                        child: const Icon(
-                          Icons.star,
-                          color: Colors.white,
-                          size: 15,
-                        ), // Smaller star
-                      ),
-                    ),
-                    Positioned(
-                      top: 30,
-                      left: 30,
-                      child: Text(
-                        'N',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 20,
-                      right: 80,
-                      child: Text(
-                        '^',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
                       ),
                     ),
                   ],
