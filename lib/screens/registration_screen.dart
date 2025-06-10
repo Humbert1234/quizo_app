@@ -24,33 +24,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       String email = _emailController.text;
       String password = _passwordController.text;
 
-      // Check if pseudo-name or email already exists
-      Map<String, dynamic>? existingUserByEmail = await _databaseHelper
-          .getUserByEmail(email);
-      Map<String, dynamic>? existingUserByPseudoName = await _databaseHelper
-          .getUserByPseudoName(pseudoName);
+      try {
+        // Check if pseudo-name or email already exists
+        Map<String, dynamic>? existingUserByEmail = await _databaseHelper
+            .getUserByEmail(email);
+        Map<String, dynamic>? existingUserByPseudoName = await _databaseHelper
+            .getUserByPseudoName(pseudoName);
 
-      if (existingUserByEmail != null) {
+        if (existingUserByEmail != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email already registered.')),
+          );
+        } else if (existingUserByPseudoName != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Pseudo-name already taken.')),
+          );
+        } else {
+          Map<String, dynamic> newUser = {
+            'pseudo_name': pseudoName,
+            'email': email,
+            'password': password,
+          };
+          await _databaseHelper.insertUser(newUser);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Registration Successful! You can now log in.'),
+            ),
+          );
+          Navigator.pop(context);
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Email already registered.')),
+          SnackBar(content: Text('Registration failed: ${e.toString()}')),
         );
-      } else if (existingUserByPseudoName != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Pseudo-name already taken.')),
-        );
-      } else {
-        Map<String, dynamic> newUser = {
-          'pseudo_name': pseudoName,
-          'email': email,
-          'password': password,
-        };
-        await _databaseHelper.insertUser(newUser);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration Successful! You can now log in.'),
-          ),
-        );
-        Navigator.pop(context);
       }
     }
   }
