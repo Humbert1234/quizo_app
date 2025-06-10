@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:quizo_app/database_helper.dart';
+import 'package:quizo_app/widgets/auth_header.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -13,6 +14,7 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _pseudoNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
@@ -57,71 +59,150 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                controller: _pseudoNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Pseudo-name',
-                  border: OutlineInputBorder(),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const AuthHeader(title: 'Sign Up'),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _pseudoNameController,
+                      decoration: InputDecoration(
+                        hintText: 'Username',
+                        prefixIcon: const Icon(Icons.person),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a pseudo-name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        hintText: 'Phone number',
+                        prefixIcon: const Icon(Icons.phone),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Email',
+                        prefixIcon: const Icon(Icons.email),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                        ).hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        prefixIcon: const Icon(Icons.lock),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a password';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters long';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 24.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _register,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF673AB7),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a pseudo-name';
-                  }
-                  return null;
-                },
               ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(
-                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                  ).hasMatch(value)) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters long';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24.0),
-              ElevatedButton(
-                onPressed: _register,
-                child: const Text('Register'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -130,6 +211,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   void dispose() {
     _pseudoNameController.dispose();
+    _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quizo_app/database_helper.dart';
 import 'package:quizo_app/screens/home_screen.dart';
 import 'package:quizo_app/screens/registration_screen.dart';
+import 'package:quizo_app/widgets/auth_header.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -47,57 +48,123 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24.0),
-              ElevatedButton(onPressed: _login, child: const Text('Login')),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegistrationScreen(),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const AuthHeader(title: 'Log In'),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Phone number',
+                        prefixIcon: const Icon(Icons.phone),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number or email';
+                        }
+                        if (!value.contains('@') || !value.contains('.')) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
                     ),
-                  );
-                },
-                child: const Text('Don\'t have an account? Register here.'),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        prefixIcon: const Icon(Icons.lock),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          // TODO: Implement Forgot Password functionality
+                        },
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Color(0xFF673AB7)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF673AB7),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          'Log In',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegistrationScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Don\'t have an account? Register here.',
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
