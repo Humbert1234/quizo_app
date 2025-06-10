@@ -394,6 +394,8 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   }
 }
 
+// Login and registration header
+
 class AuthHeader extends StatelessWidget {
   final String title;
 
