@@ -56,6 +56,44 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
     }
   }
 
+  Widget _buildAchievementCard(
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+    bool isSmallScreen,
+  ) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      elevation: 2,
+      child: Padding(
+        padding: EdgeInsets.all(isSmallScreen ? 8.0 : 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: isSmallScreen ? 30.0 : 40.0, color: color),
+            SizedBox(height: isSmallScreen ? 5.0 : 10.0),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: isSmallScreen ? 16.0 : 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: isSmallScreen ? 12.0 : 14.0,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,234 +114,234 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                margin: EdgeInsets.zero,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = constraints.maxWidth;
+          final isSmallScreen = screenWidth < 600;
+          final padding = isSmallScreen ? 8.0 : 16.0;
+          final crossAxisCount = isSmallScreen ? 2 : 4;
+          final chartHeight = isSmallScreen ? 150.0 : 200.0;
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(padding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(
+                    margin: EdgeInsets.zero,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Your Point this Week',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            '${_lifetimePoints} Pt',
-                            style: const TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20.0),
-                      SizedBox(
-                        height: 200,
-                        child: LineChart(
-                          LineChartData(
-                            gridData: const FlGridData(show: false),
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitlesWidget: (value, meta) {
-                                    return Text(
-                                      value.toInt().toString(),
-                                      style: const TextStyle(fontSize: 12),
-                                    );
-                                  },
-                                  interval: 200,
-                                  reservedSize: 40,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Your Point this Week',
+                                style: TextStyle(
+                                  fontSize: isSmallScreen ? 16.0 : 18.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitlesWidget: (value, meta) {
-                                    if (value.toInt() <
-                                        _recentPerformanceDates.length) {
-                                      final DateTime date =
-                                          _recentPerformanceDates[value
-                                              .toInt()];
-                                      return SideTitleWidget(
-                                        axisSide: meta.axisSide,
-                                        child: Text(
-                                          DateFormat('MMM dd').format(date),
-                                          style: const TextStyle(fontSize: 10),
-                                        ),
-                                      );
-                                    }
-                                    return const Text('');
-                                  },
-                                  reservedSize: 30,
-                                  interval: 1,
-                                ),
-                              ),
-                              rightTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              topTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                            ),
-                            borderData: FlBorderData(
-                              show: true,
-                              border: Border.all(
-                                color: const Color(0xff37434d),
-                                width: 1,
-                              ),
-                            ),
-                            minX: 0,
-                            maxX: (_recentPerformanceSpots.length - 1)
-                                .toDouble(),
-                            minY: 0,
-                            maxY: 1000,
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: _recentPerformanceSpots,
-                                isCurved: true,
-                                color: Colors.deepPurpleAccent,
-                                barWidth: 3,
-                                isStrokeCapRound: true,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  color: Colors.deepPurpleAccent.withOpacity(
-                                    0.3,
-                                  ),
+                              Text(
+                                '${_lifetimePoints} Pt',
+                                style: TextStyle(
+                                  fontSize: isSmallScreen ? 16.0 : 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.deepPurpleAccent,
                                 ),
                               ),
                             ],
                           ),
-                        ),
+                          SizedBox(height: isSmallScreen ? 10.0 : 20.0),
+                          SizedBox(
+                            height: chartHeight,
+                            child: LineChart(
+                              LineChartData(
+                                gridData: const FlGridData(show: false),
+                                titlesData: FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        return Text(
+                                          value.toInt().toString(),
+                                          style: TextStyle(
+                                            fontSize: isSmallScreen ? 10 : 12,
+                                          ),
+                                        );
+                                      },
+                                      interval: 200,
+                                      reservedSize: isSmallScreen ? 30 : 40,
+                                    ),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        if (value.toInt() <
+                                            _recentPerformanceDates.length) {
+                                          final DateTime date =
+                                              _recentPerformanceDates[value
+                                                  .toInt()];
+                                          return SideTitleWidget(
+                                            axisSide: meta.axisSide,
+                                            child: Text(
+                                              DateFormat('MMM dd').format(date),
+                                              style: TextStyle(
+                                                fontSize: isSmallScreen
+                                                    ? 8
+                                                    : 10,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return const Text('');
+                                      },
+                                      reservedSize: isSmallScreen ? 20 : 30,
+                                      interval: 1,
+                                    ),
+                                  ),
+                                  rightTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                ),
+                                borderData: FlBorderData(
+                                  show: true,
+                                  border: Border.all(
+                                    color: const Color(0xff37434d),
+                                    width: 1,
+                                  ),
+                                ),
+                                minX: 0,
+                                maxX: (_recentPerformanceSpots.length - 1)
+                                    .toDouble(),
+                                minY: 0,
+                                maxY: 1000,
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: _recentPerformanceSpots,
+                                    isCurved: true,
+                                    color: Colors.deepPurpleAccent,
+                                    barWidth: 3,
+                                    isStrokeCapRound: true,
+                                    dotData: const FlDotData(show: false),
+                                    belowBarData: BarAreaData(
+                                      show: true,
+                                      color: Colors.deepPurpleAccent
+                                          .withOpacity(0.3),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: isSmallScreen ? 20.0 : 30.0),
+                  Text(
+                    'Your Achievements',
+                    style: TextStyle(
+                      fontSize: isSmallScreen ? 18.0 : 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: isSmallScreen ? 10.0 : 20.0),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: padding,
+                    mainAxisSpacing: padding,
+                    childAspectRatio: isSmallScreen ? 1.2 : 1.0,
+                    children: [
+                      _buildAchievementCard(
+                        Icons.question_answer,
+                        '$_totalQuizzes',
+                        'Quizzes Taken',
+                        Colors.deepPurpleAccent,
+                        isSmallScreen,
+                      ),
+                      _buildAchievementCard(
+                        Icons.monetization_on,
+                        '$_lifetimePoints',
+                        'Lifetime Point',
+                        Colors.orangeAccent,
+                        isSmallScreen,
+                      ),
+                      _buildAchievementCard(
+                        Icons.local_fire_department,
+                        '$_quizzesPassed',
+                        'Quiz Passed',
+                        Colors.redAccent,
+                        isSmallScreen,
+                      ),
+                      _buildAchievementCard(
+                        Icons.emoji_events,
+                        '$_perfectScores',
+                        'Perfect Scores',
+                        Colors.amber,
+                        isSmallScreen,
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 30.0),
-              const Text(
-                'Your Achievements',
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20.0),
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
-                children: [
-                  _buildAchievementCard(
-                    Icons.question_answer,
-                    '$_totalQuizzes',
-                    'Quizzes Taken',
-                    Colors.deepPurpleAccent,
+                  SizedBox(height: isSmallScreen ? 15.0 : 20.0),
+                  Text(
+                    'Recent Quiz Performance',
+                    style: TextStyle(
+                      fontSize: isSmallScreen ? 18.0 : 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  _buildAchievementCard(
-                    Icons.monetization_on,
-                    '$_lifetimePoints',
-                    'Lifetime Point',
-                    Colors.orangeAccent,
-                  ),
-                  _buildAchievementCard(
-                    Icons.local_fire_department,
-                    '$_quizzesPassed',
-                    'Quiz Passed',
-                    Colors.redAccent,
-                  ),
-                  _buildAchievementCard(
-                    Icons.emoji_events,
-                    '$_perfectScores',
-                    'Perfect Scores',
-                    Colors.amber,
+                  SizedBox(height: isSmallScreen ? 10.0 : 20.0),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _performanceHistory.length,
+                    itemBuilder: (context, index) {
+                      final entry = _performanceHistory[index];
+                      final DateTime date = DateTime.parse(entry['date']);
+                      final String formattedDate = DateFormat(
+                        'MMM dd, yyyy - hh:mm a',
+                      ).format(date);
+                      return Card(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 0.0,
+                          vertical: isSmallScreen ? 4.0 : 8.0,
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            'Theme: ${entry['quiz_theme']}',
+                            style: TextStyle(
+                              fontSize: isSmallScreen ? 14.0 : 16.0,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Score: ${entry['score']}\nDate: $formattedDate',
+                            style: TextStyle(
+                              fontSize: isSmallScreen ? 12.0 : 14.0,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
-              const SizedBox(height: 20.0),
-              const Text(
-                'Recent Quiz Performance',
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20.0),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _performanceHistory.length,
-                itemBuilder: (context, index) {
-                  final entry = _performanceHistory[index];
-                  final DateTime date = DateTime.parse(entry['date']);
-                  final String formattedDate = DateFormat(
-                    'MMM dd, yyyy - hh:mm a',
-                  ).format(date);
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 0.0,
-                      vertical: 8.0,
-                    ),
-                    child: ListTile(
-                      title: Text('Theme: ${entry['quiz_theme']}'),
-                      subtitle: Text(
-                        'Score: ${entry['score']}\nDate: $formattedDate',
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAchievementCard(
-    IconData icon,
-    String value,
-    String label,
-    Color color,
-  ) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 40.0, color: color),
-            const SizedBox(height: 10.0),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
             ),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14.0, color: Colors.grey),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
