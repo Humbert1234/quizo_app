@@ -62,8 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                        hintText: 'Phone number',
-                        prefixIcon: const Icon(Icons.phone),
+                        hintText: 'Email',
+                        prefixIcon: const Icon(Icons.email),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -77,9 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your phone number or email';
+                          return 'Please enter your email';
                         }
-                        if (!value.contains('@') || !value.contains('.')) {
+                        if (!RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                        ).hasMatch(value)) {
                           return 'Please enter a valid email address';
                         }
                         return null;
